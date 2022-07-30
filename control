@@ -1,0 +1,144 @@
+<?php
+print_r($argv);
+$base_url = 'https://package.anytion.com/install/';
+define('baseUrl', 'http://lab.localhost/install/');
+
+if (isset($argv[1])) {
+    switch ($argv[1]) {
+        case 'list':
+            ShowListPackage();
+            break;
+        case 'install':
+        case 'i':
+            installPackage($argv);
+            break;
+        case 'create':
+            createTemplate($argv);
+            break;
+        case 'rm':
+        case 'remove':
+            removeModule($argv);
+            break;
+        default:
+            echo 'command not found';
+    }
+} else {
+    Help();
+}
+
+function ShowListPackage()
+{
+    $data = glob('./modules/*');
+    foreach ($data as $pk_name) {
+        $only_name = explode('/', $pk_name);
+        echo '-@ ' . $only_name[sizeof($only_name) - 1] . PHP_EOL;
+    }
+}
+
+function installPackage($argv)
+{
+    ini_set('user_agent', '3lcieh2dfbon3032a');
+
+    if (!isset($argv[2])) {
+        echo '# control install <package>';
+        return;
+    }
+    if (isset($argv[3])) {
+        $url = file_get_contents(baseUrl . 'module/' . $argv[2] . '/' . $argv[3]);
+    } else {
+        $url = file_get_contents(baseUrl . 'module/' . $argv[2]);
+    }
+    addModule($url, $argv[2]);
+}
+
+function createTemplate($argv)
+{
+    ini_set('user_agent', '3lcieh2dfbon3032a');
+
+    if (!isset($argv[2])) {
+        echo '# control create <package>';
+        return;
+    }
+    if (isset($argv[3])) {
+        $url = file_get_contents(baseUrl . 'template/' . $argv[2] . '/' . $argv[3]);
+    } else {
+        $url = file_get_contents(baseUrl . 'template/' . $argv[2]);
+    }
+    addTemplate($url);
+}
+
+function removeModule($argv)
+{
+    $dir = './modules/' . $argv[2];
+    function allInDir(string $dir): void
+    {
+        $getDir = glob($dir);
+        if (!empty($getDir)) {
+            foreach ($getDir as $file) {
+                if (!is_dir($file)) {
+                    unlink($file);
+                } else {
+                    allInDir("$file/*");
+                    rmdir($file);
+                }
+            }
+        }
+    }
+    allInDir($dir);
+    @rmdir($dir);
+    echo "successfuly\n";
+}
+
+function addTemplate($url)
+{
+    $json =  file_get_contents("$url?recursive=1");
+    $jo = json_decode($json);
+
+    $tree = $jo->tree;
+    $url = str_replace('git/trees/', '/', $url);
+    $url = str_replace('https://api.github.com/repos', 'https://raw.githubusercontent.com', $url);
+    foreach ($tree as $value) {
+        if ($value->mode == "100644") {
+            $file = file_get_contents("$url/" . $value->path);
+            file_put_contents($value->path, $file);
+        } else if ($value->mode == "040000") {
+            mkdir($value->path);
+        } else {
+            echo "Not know mode";
+            exit;
+        }
+    }
+    unlink('README.md');
+    echo "install successfuly\n";
+}
+
+function addModule($url, $moduleName)
+{
+    $json =  file_get_contents("$url?recursive=1");
+    $jo = json_decode($json);
+    mkdir('modules');
+    $tree = $jo->tree;
+    $url = str_replace('git/trees/', '/', $url);
+    $url = str_replace('https://api.github.com/repos', 'https://raw.githubusercontent.com', $url);
+    foreach ($tree as $value) {
+        if ($value->mode == "100644") {
+            $file = file_get_contents("$url/" . $value->path);
+            file_put_contents("modules/$moduleName/" . $value->path, $file);
+        } else if ($value->mode == "040000") {
+            mkdir("modules/$moduleName/" . $value->path);
+        } else {
+            echo "Not know mode";
+            exit;
+        }
+    }
+    echo "installed successfully" . PHP_EOL;
+}
+
+function Help(){
+    echo '# control list | to show modules list' . PHP_EOL;
+    echo '# control install <module> | to install modules' . PHP_EOL;
+    echo '# control install <module> <version> | to install modules with version' . PHP_EOL;
+    echo '# control create <template> | to install template' . PHP_EOL;
+    echo '# control create <template> <version> | to install template with version' . PHP_EOL;
+    echo '# control remove <module> | to remove module' . PHP_EOL;
+}
