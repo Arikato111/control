@@ -67,9 +67,9 @@ function createTemplate($argv)
         return;
     }
     if (isset($argv[3])) {
-        $url = file_get_contents(baseUrl . 'template/' . $argv[2] . '/' . $argv[3]);
+        $url = @file_get_contents(baseUrl . 'template/' . $argv[2] . '/' . $argv[3]);
     } else {
-        $url = file_get_contents(baseUrl . 'template/' . $argv[2]);
+        $url = @file_get_contents(baseUrl . 'template/' . $argv[2]);
     }
     addTemplate($url);
 }
@@ -107,7 +107,7 @@ function addTemplate($url)
     foreach ($tree as $value) {
         if ($value->mode == "100644") {
             $file = file_get_contents("$url/" . $value->path);
-            file_put_contents($value->path, $file);
+            @file_put_contents($value->path, $file);
         } else if ($value->mode == "040000") {
             mkdir($value->path);
         } else {
@@ -131,7 +131,7 @@ function addModule($url, $moduleName)
     foreach ($tree as $value) {
         if ($value->mode == "100644") {
             $file = file_get_contents("$url/" . $value->path);
-            file_put_contents("modules/$moduleName/" . $value->path, $file);
+            @file_put_contents("modules/$moduleName/" . $value->path, $file);
         } else if ($value->mode == "040000") {
             mkdir("modules/$moduleName/" . $value->path);
         } else {
@@ -162,7 +162,7 @@ function setSPA()
 function init()
 {
     ini_set('user_agent', '3lcieh2dfbon3032a');
-    file_put_contents('control', file_get_contents('https://raw.githubusercontent.com/Arikato111/control/master/control'));
+    file_put_contents('control', @file_get_contents('https://raw.githubusercontent.com/Arikato111/control/master/control'));
 }
 
 function Help()
