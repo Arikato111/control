@@ -20,6 +20,9 @@ if (isset($argv[1])) {
         case 'spa':
             setSPA();
             break;
+        case 'init':
+            init();
+            break;
         case 'help':
             Help();
             break;
@@ -118,7 +121,7 @@ function addTemplate($url)
 
 function addModule($url, $moduleName)
 {
-    if(!file_exists('./modules')) mkdir('./modules');
+    if (!file_exists('./modules')) mkdir('./modules');
     $json =  file_get_contents("$url?recursive=1");
     $jo = json_decode($json);
     mkdir('modules/' . $moduleName);
@@ -139,9 +142,11 @@ function addModule($url, $moduleName)
     echo "installed successfully" . PHP_EOL;
 }
 
-function setSPA() {
-    file_put_contents('.htaccess', 
-    '<IfModule mod_rewrite.c>
+function setSPA()
+{
+    file_put_contents(
+        '.htaccess',
+        '<IfModule mod_rewrite.c>
 
     RewriteEngine On
     RewriteBase /
@@ -150,11 +155,18 @@ function setSPA() {
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule . /index.php [L]
   
-  </IfModule>');
-  mkdir('./public');
+  </IfModule>'
+    );
+    mkdir('./public');
+}
+function init()
+{
+    ini_set('user_agent', '3lcieh2dfbon3032a');
+    file_put_contents('control', file_get_contents('https://raw.githubusercontent.com/Arikato111/control/master/control'));
 }
 
-function Help(){
+function Help()
+{
     echo '# control list | to show modules list' . PHP_EOL;
     echo '# control install <module> | to install modules' . PHP_EOL;
     echo '# control install <module> <version> | to install modules with version' . PHP_EOL;
@@ -162,4 +174,5 @@ function Help(){
     echo '# control create <template> <version> | to install template with version' . PHP_EOL;
     echo '# control remove <module> | to remove module' . PHP_EOL;
     echo '# control spa | to set file for spa ' . PHP_EOL;
+    echo '# control init | for make control in offline ' . PHP_EOL;
 }
