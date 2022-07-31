@@ -10,6 +10,9 @@ if (isset($argv[1])) {
         case 'i':
             installPackage($argv);
             break;
+        case 'url':
+            urlInstall($argv);
+            break;
         case 'create':
             createTemplate($argv);
             break;
@@ -39,6 +42,44 @@ function ShowListPackage()
     foreach ($data as $pk_name) {
         $only_name = explode('/', $pk_name);
         echo '-@ ' . $only_name[sizeof($only_name) - 1] . PHP_EOL;
+    }
+}
+
+function urlInstall($argv)
+{
+    if (!isset($argv[2]) || !isset($argv[3])) {
+        echo "# control url <install> <github-branch-url>  | for install module\n";
+        echo "# control url <create> <github-branch-url>  | for install template\n";
+        return;
+    }
+    $url = $argv[3];
+    if (
+        str_contains($url, 'https://github.com/') &&
+        str_contains($url, '/tree/')
+    ) {
+        $name = explode('/', $url)[4];
+        $url = str_replace('https://github.com/', 'https://api.github.com/repos/', $url);
+        $url = str_replace('tree', 'git/trees', $url);
+        echo "installing  $url\n";
+
+        ini_set('user_agent', '3lcieh2dfbon3032a');
+
+        switch ($argv[2]) {
+            case 'i':
+            case 'install':
+                addModule($url, $name);
+                break;
+            case 'create':
+                addTemplate($url);
+                break;
+            default:
+                echo "# control url <install> <github-branch-url>  | for install module\n";
+                echo "# control url <create> <github-branch-url>  | for install template\n";
+        }
+    } else {
+        echo "ERROR url\n";
+        echo "# control url <install> <github-branch-url>  | for install module\n";
+        echo "# control url <create> <github-branch-url>  | for install template\n";
     }
 }
 
@@ -98,7 +139,10 @@ function removeModule($argv)
 
 function addTemplate($url)
 {
-    $json =  file_get_contents("$url?recursive=1");
+    $json =  @file_get_contents("$url?recursive=1");
+    if ($json == false) {
+        echo "Error installing failed\n";
+    }
     $jo = json_decode($json);
 
     $tree = $jo->tree;
@@ -122,9 +166,12 @@ function addTemplate($url)
 function addModule($url, $moduleName)
 {
     if (!file_exists('./modules')) mkdir('./modules');
-    $json =  file_get_contents("$url?recursive=1");
+    $json =  @file_get_contents("$url?recursive=1");
+    if ($json == false) {
+        echo "Error installing failed\n";
+    }
     $jo = json_decode($json);
-    mkdir('modules/' . $moduleName);
+    mkdir('./modules/' . $moduleName);
     $tree = $jo->tree;
     $url = str_replace('git/trees/', '/', $url);
     $url = str_replace('https://api.github.com/repos', 'https://raw.githubusercontent.com', $url);
@@ -174,5 +221,8 @@ function Help()
     echo '# control create <template> <version> | to install template with version' . PHP_EOL;
     echo '# control remove <module> | to remove module' . PHP_EOL;
     echo '# control spa | to set file for spa ' . PHP_EOL;
-    echo '# control init | for make control in offline ' . PHP_EOL;
+    echo '# control init | for make control in offline ' . PHP_EOL . PHP_EOL;
+
+    echo "# control url <install> <github-branch-url>  | for install module with github branch url\n";
+    echo "# control url <create> <github-branch-url>  | for install template with github branch url \n";
 }
