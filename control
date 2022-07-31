@@ -139,9 +139,14 @@ function removeModule($argv)
 
 function addTemplate($url)
 {
+    echo "installing template url : '$url'\n";
+    echo "Do you want to install? ( [Enter] to install, [ctrl + c] to cancel )\n";
+    readline(": ");
+
     $json =  @file_get_contents("$url?recursive=1");
     if ($json == false) {
         echo "Error installing failed\n";
+        return;
     }
     $jo = json_decode($json);
 
@@ -165,10 +170,15 @@ function addTemplate($url)
 
 function addModule($url, $moduleName)
 {
+    echo "installing $moduleName url : '$url'\n";
+    echo "Do you want to install? ( [Enter] to install, [ctrl + c] to cancel )\n";
+    readline(": ");
+
     if (!file_exists('./modules')) mkdir('./modules');
     $json =  @file_get_contents("$url?recursive=1");
     if ($json == false) {
         echo "Error installing failed\n";
+        return;
     }
     $jo = json_decode($json);
     mkdir('./modules/' . $moduleName);
