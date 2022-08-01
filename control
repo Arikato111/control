@@ -114,6 +114,8 @@ function createTemplate($argv)
     } else {
         $url = @file_get_contents(baseUrl . 'template/' . $argv[2]);
     }
+    $url = str_replace('https://github.com/', 'https://api.github.com/repos/', $url);
+    $url = str_replace('tree', 'git/trees', $url);
     addTemplate($url);
 }
 
