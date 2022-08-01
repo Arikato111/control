@@ -58,8 +58,6 @@ function urlInstall($argv)
         str_contains($url, '/tree/')
     ) {
         $name = explode('/', $url)[4];
-        $url = str_replace('https://github.com/', 'https://api.github.com/repos/', $url);
-        $url = str_replace('tree', 'git/trees', $url);
         echo "installing  $url\n";
 
         ini_set('user_agent', '3lcieh2dfbon3032a');
@@ -96,8 +94,7 @@ function installPackage($argv)
     } else {
         $url = file_get_contents(baseUrl . 'module/' . $argv[2]);
     }
-    $url = str_replace('https://github.com/', 'https://api.github.com/repos/', $url);
-    $url = str_replace('tree', 'git/trees', $url);
+
     addModule($url, $argv[2]);
 }
 
@@ -114,8 +111,7 @@ function createTemplate($argv)
     } else {
         $url = @file_get_contents(baseUrl . 'template/' . $argv[2]);
     }
-    $url = str_replace('https://github.com/', 'https://api.github.com/repos/', $url);
-    $url = str_replace('tree', 'git/trees', $url);
+
     addTemplate($url);
 }
 
@@ -143,9 +139,12 @@ function removeModule($argv)
 
 function addTemplate($url)
 {
-    echo "installing template url : '$url'\n";
+    echo "installing template from github url : '$url'\n";
     echo "Do you want to install? ( [Enter] to install, [ctrl + c] to cancel )\n";
     readline(": ");
+
+    $url = str_replace('https://github.com/', 'https://api.github.com/repos/', $url);
+    $url = str_replace('tree', 'git/trees', $url);
 
     $json =  @file_get_contents("$url?recursive=1");
     if ($json == false) {
@@ -174,9 +173,12 @@ function addTemplate($url)
 
 function addModule($url, $moduleName)
 {
-    echo "installing $moduleName url : '$url'\n";
+    echo "installing $moduleName from github url : '$url'\n";
     echo "Do you want to install? ( [Enter] to install, [ctrl + c] to cancel )\n";
     readline(": ");
+
+    $url = str_replace('https://github.com/', 'https://api.github.com/repos/', $url);
+    $url = str_replace('tree', 'git/trees', $url);
 
     if (!file_exists('./modules')) mkdir('./modules');
     $json =  @file_get_contents("$url?recursive=1");
