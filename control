@@ -96,6 +96,8 @@ function installPackage($argv)
     } else {
         $url = file_get_contents(baseUrl . 'module/' . $argv[2]);
     }
+    $url = str_replace('https://github.com/', 'https://api.github.com/repos/', $url);
+    $url = str_replace('tree', 'git/trees', $url);
     addModule($url, $argv[2]);
 }
 
