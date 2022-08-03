@@ -158,13 +158,15 @@ function addTemplate($url)
     $url = str_replace('https://api.github.com/repos', 'https://raw.githubusercontent.com', $url);
     foreach ($tree as $value) {
         if ($value->mode == "100644") {
+            echo "Downloading file from $url/{$value->path}\n";
             $file = file_get_contents("$url/" . $value->path);
+            echo "installing file {$value->path}\n";
             @file_put_contents($value->path, $file);
         } else if ($value->mode == "040000") {
+            echo "create directory {$value->path}\n";
             mkdir($value->path);
         } else {
-            echo "Not know mode";
-            exit;
+            echo "ERROR!! Not know mode";
         }
     }
     unlink('README.md');
@@ -193,9 +195,12 @@ function addModule($url, $moduleName)
     $url = str_replace('https://api.github.com/repos', 'https://raw.githubusercontent.com', $url);
     foreach ($tree as $value) {
         if ($value->mode == "100644") {
+            echo "Downloading file from $url/{$value->path}\n";
             $file = file_get_contents("$url/" . $value->path);
+            echo "installing file ./modules/$moduleName/{$value->path}\n";
             @file_put_contents("modules/$moduleName/" . $value->path, $file);
         } else if ($value->mode == "040000") {
+            echo "create directory ./modules/$moduleName/{$value->path}\n";
             mkdir("modules/$moduleName/" . $value->path);
         } else {
             echo "Not know mode";
