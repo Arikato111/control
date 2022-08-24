@@ -20,11 +20,11 @@ if (isset($argv[1])) {
         case 'remove':
             removeModule($argv);
             break;
-        case 'spa':
+        case 'init':
             setSPA();
             break;
-        case 'init':
-            init();
+        case 'update':
+            update();
             break;
         case 'help':
             Help();
@@ -227,7 +227,7 @@ function setSPA()
     );
     mkdir('./public');
 }
-function init()
+function update()
 {
     ini_set('user_agent', '3lcieh2dfbon3032a');
     file_put_contents('control', @file_get_contents('https://raw.githubusercontent.com/Arikato111/control/master/control'));
@@ -241,8 +241,8 @@ function Help()
     echo '# control create <template> | to install template' . PHP_EOL;
     echo '# control create <template> <version> | to install template with version' . PHP_EOL;
     echo '# control remove <module> | to remove module' . PHP_EOL;
-    echo '# control spa | to set file for spa ' . PHP_EOL;
-    echo '# control init | for make control in offline ' . PHP_EOL . PHP_EOL;
+    echo '# control init | to set file for spa ' . PHP_EOL;
+    echo '# control update | for update control ' . PHP_EOL . PHP_EOL;
 
     echo "# control url <install> <github-branch-url>  | for install module with github branch url\n";
     echo "# control url <create> <github-branch-url>  | for install template with github branch url \n";
