@@ -1,5 +1,12 @@
 <?php
+/*  * Copyright (c) 2022 ณวสันต์ วิศิษฏ์ศิงขร
+    *
+    * This source code is licensed under the MIT license found in the
+    * LICENSE file in the root directory of this source tree.
+*/
+define('CONTROL_VERSION', '0.1.0');
 define('baseUrl', 'https://package.anytion.com/install/');
+ini_set('user_agent', '3lcieh2dfbon3032a');
 
 if (isset($argv[1])) {
     switch ($argv[1]) {
@@ -21,12 +28,20 @@ if (isset($argv[1])) {
             removeModule($argv);
             break;
         case 'init':
+            setInit($argv);
+            break;
+        case 'spa':
             setSPA();
+            break;
+        case '-v':
+        case '--version':
+            echo CONTROL_VERSION . PHP_EOL;
             break;
         case 'update':
             update();
             break;
         case 'help':
+        case '--help':
             Help();
             break;
         default:
@@ -38,10 +53,10 @@ if (isset($argv[1])) {
 
 function ShowListPackage()
 {
-    $data = glob('./modules/*');
-    foreach ($data as $pk_name) {
-        $only_name = explode('/', $pk_name);
-        echo '-@ ' . $only_name[sizeof($only_name) - 1] . PHP_EOL;
+    $package = getPackage();
+    $data = $package->package;
+    foreach ($data as $key => $pk) {
+        echo "~@ {$key} :^{$pk->version}\n";
     }
 }
 
@@ -83,7 +98,14 @@ function urlInstall($argv)
 
 function installPackage($argv)
 {
-    ini_set('user_agent', '3lcieh2dfbon3032a');
+    if (!isset($argv[2])) {
+        // install all modules from package.json
+        $package = getPackage();
+        foreach ($package->package as $key => $pk) {
+            addModule($pk->url, $key, $pk->version, true, false);
+        }
+        exit;
+    }
 
     if (!isset($argv[2])) {
         echo '# control install <package>';
@@ -91,16 +113,15 @@ function installPackage($argv)
     }
     if (isset($argv[3])) {
         $url = file_get_contents(baseUrl . 'module/' . $argv[2] . '/' . $argv[3]);
+        addModule($url, $argv[2], $argv['3']);
     } else {
         $url = file_get_contents(baseUrl . 'module/' . $argv[2]);
+        addModule($url, $argv[2]);
     }
-
-    addModule($url, $argv[2]);
 }
 
 function createTemplate($argv)
 {
-    ini_set('user_agent', '3lcieh2dfbon3032a');
 
     if (!isset($argv[2])) {
         echo '# control create <package>';
@@ -117,6 +138,11 @@ function createTemplate($argv)
 
 function removeModule($argv)
 {
+    $module_name = $argv[2];
+    $package = getPackage();
+    unset($package->package->{$module_name});
+    savePackage($package);
+
     $dir = './modules/' . $argv[2];
     function allInDir(string $dir): void
     {
@@ -137,8 +163,32 @@ function removeModule($argv)
     echo "successfuly\n";
 }
 
+function getPackage()
+{
+    if (!file_exists('./package.json')) {
+        echo "Not found package.json\n";
+        echo '# control init | to create package.json';
+        exit;
+    }
+    $package = json_decode(file_get_contents('./package.json'));
+    return $package;
+}
+
+function savePackage($package)
+{
+    $package_json = json_encode($package, JSON_PRETTY_PRINT);
+    $package_json = str_replace('\/', '/', $package_json);
+    file_put_contents('./package.json', $package_json);
+}
+
+/************** Manage *********************** */
+
 function addTemplate($url)
 {
+    if (empty($url)) {
+        echo "ERROR ! URL EMTY\n";
+        exit;
+    }
     echo "installing template from github url : '$url'\n";
     echo "Do you want to install? ( [Enter] to install, [ctrl + c] to cancel )\n";
     readline(": ");
@@ -173,11 +223,22 @@ function addTemplate($url)
     echo "install successfuly\n";
 }
 
-function addModule($url, $moduleName)
+function addModule($url, $moduleName, $version = 'main', $has_modules = false, $asking = true)
 {
-    echo "installing $moduleName from github url : '$url'\n";
-    echo "Do you want to install? ( [Enter] to install, [ctrl + c] to cancel )\n";
-    readline(": ");
+    if (empty($url)) {
+        echo "ERROR ! URL EMTY\n";
+        exit;
+    }
+    $package = getPackage();
+    $module = [];
+    $module['version'] = $version;
+    $module['url'] = $url;
+
+    if ($asking) {
+        echo "installing $moduleName from github url : '$url'\n";
+        echo "Do you want to install? ( [Enter] to install, [ctrl + c] to cancel )\n";
+        readline(": ");
+    }
 
     $url = str_replace('https://github.com/', 'https://api.github.com/repos/', $url);
     $url = str_replace('tree', 'git/trees', $url);
@@ -207,8 +268,70 @@ function addModule($url, $moduleName)
             exit;
         }
     }
+    if (!$has_modules) {
+
+        $pj_name = $moduleName;
+        $package->package->$pj_name = $module;
+
+        savePackage($package);
+    }
     echo "installed successfully" . PHP_EOL;
 }
+
+/************** Manage *********************** */
+
+function update()
+{
+    ini_set('user_agent', '3lcieh2dfbon3032a');
+    file_put_contents('control', @file_get_contents('https://raw.githubusercontent.com/Arikato111/control/master/control'));
+}
+
+// *********** init ************************** //
+function setInit($argv)
+{
+    $project_name = explode('\\', __DIR__);
+    $project_name = $project_name[sizeof($project_name) - 1];
+    if (isset($argv[2]) && $argv[2] == '-y') {
+        $json_format =
+            '{
+    "name": "' . $project_name . '",
+    "version": "1.0.0",
+    "description": "",
+    "author": "",
+    "license": "ISC",
+    "package": {}
+}';
+        file_put_contents('./package.json', $json_format);
+    } else {
+        $project = [];
+
+        echo "project name : ($project_name) ";
+        $project['name'] = readline();
+        if (empty($project['name'])) $project['name'] = $project_name;
+
+        echo "version : (1.0.0) ";
+        $project['version'] = readline();
+        if (empty($project['version'])) $project['version'] = '1.0.0';
+
+        echo 'description : ';
+        $project['description'] = readline();
+
+        echo 'License : (ISC) ';
+        $project['license'] = readline();
+        $project['package'] = (object)[];
+        $project_json = json_encode($project, JSON_PRETTY_PRINT);
+        echo $project_json;
+        echo PHP_EOL;
+        echo 'Is it Okay ? ( [Enter] to Yes, [ctrl + c] to cancel )';
+        readline();
+        file_put_contents('./package.json', $project_json);
+    }
+    echo 'Create package.json is successfuly';
+    echo PHP_EOL;
+}
+
+/********************************************* */
+
 
 function setSPA()
 {
@@ -227,23 +350,30 @@ function setSPA()
     );
     mkdir('./public');
 }
-function update()
-{
-    ini_set('user_agent', '3lcieh2dfbon3032a');
-    file_put_contents('control', @file_get_contents('https://raw.githubusercontent.com/Arikato111/control/master/control'));
-}
+
 
 function Help()
 {
-    echo '# control list | to show modules list' . PHP_EOL;
-    echo '# control install <module> | to install modules' . PHP_EOL;
-    echo '# control install <module> <version> | to install modules with version' . PHP_EOL;
-    echo '# control create <template> | to install template' . PHP_EOL;
-    echo '# control create <template> <version> | to install template with version' . PHP_EOL;
-    echo '# control remove <module> | to remove module' . PHP_EOL;
-    echo '# control init | to set file for spa ' . PHP_EOL;
-    echo '# control update | for update control ' . PHP_EOL . PHP_EOL;
+    echo "\n";
+    echo "--- CONTROL " . CONTROL_VERSION . " ---\n";
+    echo "\n--- Project ---\n";
+    echo '  # control init | to set project and create package.json ' . PHP_EOL;
+    echo '  # control spa | to set project as spa' . PHP_EOL;
+    echo '  # control update | for update control ' . PHP_EOL . PHP_EOL;
 
-    echo "# control url <install> <github-branch-url>  | for install module with github branch url\n";
-    echo "# control url <create> <github-branch-url>  | for install template with github branch url \n";
+    echo "\n--- package manage ---\n";
+    echo '  # control list | to show modules list' . PHP_EOL;
+    echo '  # control install | to install all modules from package.json ' . PHP_EOL;
+    echo '  # control install <module> | to install modules' . PHP_EOL;
+    echo '  # control install <module> <version> | to install modules with version' . PHP_EOL;
+    echo '  # control create <template> | to install template' . PHP_EOL;
+    echo '  # control create <template> <version> | to install template with version' . PHP_EOL;
+    echo '  # control remove <module> | to remove module' . PHP_EOL . PHP_EOL;
+
+    echo "\n--- package from url ---\n";
+    echo "  # control url <install> <github-branch-url>  | for install module with github branch url\n";
+    echo "  # control url <create> <github-branch-url>  | for install template with github branch url \n\n";
+
+    echo "\n--- Github ---\n";
+    echo "  Github url | https://github.com/Arikato111/control\n";
 }
