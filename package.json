@@ -1,0 +1,17 @@
+{
+  "name": "test-package",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "package": {
+    "use-import": {
+      "version": "main",
+      "github": "https://github.com/Arikato111/use-import"
+    },
+    "wisios": {
+      "version": "type",
+      "github": "https://github.com/Arikato111/version"
+    }
+  }
+}
