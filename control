@@ -336,8 +336,13 @@ function setInit($argv)
 }
 
 /********************************************* */
-function runServer() {
-    exec('php -S localhost:');
+function runServer()
+{
+    $port = 3000;
+    while (true) {
+        @exec("php -S localhost:{$port}");
+        $port++;
+    }
 }
 
 function setSPA()
@@ -368,7 +373,7 @@ function Help()
     echo '  # control spa | to set project as spa' . PHP_EOL;
     echo '  # control update | for update control ' . PHP_EOL;
     echo '  # control serve | to run server at localhost [not recommended]' . PHP_EOL . PHP_EOL;
-    
+
     echo "\n--- package manage ---\n";
     echo '  # control list | to show modules list' . PHP_EOL;
     echo '  # control install | to install all modules from package.json ' . PHP_EOL;
