@@ -321,6 +321,8 @@ function setInit($argv)
 
         echo 'License : (ISC) ';
         $project['license'] = readline();
+        if (empty($project['license'])) $project['license'] = 'ISC';
+
         $project['package'] = (object)[];
         $project_json = json_encode($project, JSON_PRETTY_PRINT);
         echo $project_json;
