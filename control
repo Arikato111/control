@@ -384,8 +384,8 @@ function Help()
     echo '  # control remove <module> | to remove module' . PHP_EOL . PHP_EOL;
 
     echo "\n--- package from url ---\n";
-    echo "  # control url <install> <github-branch-url>  | for install module with github branch url\n";
-    echo "  # control url <create> <github-branch-url>  | for install template with github branch url \n\n";
+    echo "  # control url install <github-branch-url>  | for install module with github branch url\n";
+    echo "  # control url create <github-branch-url>  | for install template with github branch url \n\n";
 
     echo "\n--- Github ---\n";
     echo "  Github url | https://github.com/Arikato111/control\n";
