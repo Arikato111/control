@@ -52,21 +52,21 @@ file_put_contents('control', file_get_contents('https://raw.githubusercontent.co
 
 `# control install` คือการติดตั้ง modules ตามรายการใน package.json 
 
-`# control install <module>`  แทน **<module>** ด้วยชื่อของ module ที่ต้องการติดตั้ง เป็นการติดตั้ง module ที่ระบุ
+`# control install <module>`  แทน `<module>` ด้วยชื่อของ module ที่ต้องการติดตั้ง เป็นการติดตั้ง module ที่ระบุ
 
 `# control install <module> <version>` สามารถระบุเวอร์ชั่นย่อยที่ต้องการติดตั้ง โดยแทน `<version>` ด้วย ชื่อของเวอร์ชั่นย่อยที่ต้องการ
 
-`# control create <template>` เป็นการติดตั้ง **template** โดยแทน **<template>** ด้วยชื่อของ template ที่ต้องการติดตั้ง
+`# control create <template>` เป็นการติดตั้ง **template** โดยแทน `<template>` ด้วยชื่อของ template ที่ต้องการติดตั้ง
 
-`# control create <template> <version>` สามารถระบุเวอร์ชั่นย่อยของ **template** ได้ โดยแทน **<version>** ด้วยชื่อเวอร์ชั่นย่อยที่ต้องการ
+`# control create <template> <version>` สามารถระบุเวอร์ชั่นย่อยของ **template** ได้ โดยแทน `<version>` ด้วยชื่อเวอร์ชั่นย่อยที่ต้องการ
 
-`# control remove <module>` เป็นการลบ module ที่เคยติดตั้งไปแล้ว โดยแทน **<module>** ด้วยชื่อ module ที่ต้องการลบ
+`# control remove <module>` เป็นการลบ module ที่เคยติดตั้งไปแล้ว โดยแทน `<module>` ด้วยชื่อ module ที่ต้องการลบ
 
 
 ### ติดตั้ง modules จาก Url github
 
 #### สำคัญ ต้องใช้ Url ที่ระบุ branch ด้วย โดยคลิกเลือก branch ก่อนทำการ copy
 
-`# control url install <github-branch-url>` ติดตั้ง module โดยแทน **<github-branch-url>** ด้วย Url ที่คัดลอกมา
+`# control url install <github-branch-url>` ติดตั้ง module โดยแทน `<github-branch-url>` ด้วย Url ที่คัดลอกมา
 
-`# control url create <github-branch-url>`  ติดตั้ง template โดยแทน **<github-branch-url>** ด้วย Url ที่คัดลอกมา
+`# control url create <github-branch-url>`  ติดตั้ง template โดยแทน `<github-branch-url> ด้วย Url ที่คัดลอกมา
