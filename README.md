@@ -5,7 +5,7 @@
 
 ### ตัวช่วยจัดการ Modules & template for PHP
 
-[Docs]()
+[Docs](#docs)
 
 [Get started](#get-started)
 
