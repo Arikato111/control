@@ -14,7 +14,7 @@ if (isset($argv[1])) {
             ShowListPackage();
             break;
         case 'serve':
-            runServer();
+            runServer($argv);
             break;
         case 'install':
         case 'i':
@@ -336,9 +336,26 @@ function setInit($argv)
 }
 
 /********************************************* */
-function runServer()
+function runServer($argv)
 {
-    $port = 3000;
+    if (isset($argv[2])) {
+        switch ($argv[2]) {
+            case '-p':
+            case '--port':
+                if (!isset($argv[3])) {
+                    echo 'Please insert port number' . PHP_EOL;
+                    echo "# control serve --port <port>\n";
+                    exit;
+                }
+                $port = $argv[3];
+                break;
+            default:
+                echo 'Not found commant ' . $argv[2];
+                exit;
+        }
+    } else {
+        $port = 3000;
+    }
     while (true) {
         @exec("php -S localhost:{$port}");
         $port++;
