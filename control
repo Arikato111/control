@@ -4,6 +4,11 @@
     * This source code is licensed under the MIT license found in the
     * LICENSE file in the root directory of this source tree.
 */
+
+/*  * Control version 0.1.0 
+    * Github : https://github.com/Arikato111/control
+*/
+
 define('CONTROL_VERSION', '0.1.0');
 define('baseUrl', 'https://package.anytion.com/install/');
 ini_set('user_agent', '3lcieh2dfbon3032a');
@@ -344,7 +349,7 @@ function runServer($argv)
             case '--port':
                 if (!isset($argv[3])) {
                     echo 'Please insert port number' . PHP_EOL;
-                    echo "# control serve --port <port>\n";
+                    echo "  # control serve --port <port>\n";
                     exit;
                 }
                 $port = $argv[3];
@@ -385,6 +390,7 @@ function Help()
 {
     echo "\n";
     echo "--- CONTROL " . CONTROL_VERSION . " ---\n";
+    echo '  # control -v | to check vertion of `control`' . PHP_EOL;
     echo "\n--- Project ---\n";
     echo '  # control init | to set project and create package.json ' . PHP_EOL;
     echo '  # control spa | to set project as spa' . PHP_EOL;
