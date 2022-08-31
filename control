@@ -325,6 +325,9 @@ function setInit($argv)
         echo 'description : ';
         $project['description'] = readline();
 
+        echo 'author : ';
+        $project['author'] = readline();
+
         echo 'License : (ISC) ';
         $project['license'] = readline();
         if (empty($project['license'])) $project['license'] = 'ISC';
