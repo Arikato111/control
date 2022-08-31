@@ -5,11 +5,16 @@
     * LICENSE file in the root directory of this source tree.
 */
 
-/*  * Control version 0.1.0 
+/*  * Control version 0.1.1 
     * Github : https://github.com/Arikato111/control
 */
 
-define('CONTROL_VERSION', '0.1.0');
+/*  * What's new !
+    * update installing package (library & template)
+    * change input when install to <library@version> and <template@version>
+*/
+
+define('CONTROL_VERSION', '0.1.1');
 define('baseUrl', 'https://package.anytion.com/install/');
 ini_set('user_agent', '3lcieh2dfbon3032a');
 
@@ -71,8 +76,8 @@ function ShowListPackage()
 function urlInstall($argv)
 {
     if (!isset($argv[2]) || !isset($argv[3])) {
-        echo "# control url <install> <github-branch-url>  | for install module\n";
-        echo "# control url <create> <github-branch-url>  | for install template\n";
+        echo "# control url install <github-branch-url>  | for install library\n";
+        echo "# control url create <github-branch-url>  | for install template\n";
         return;
     }
     $url = $argv[3];
@@ -94,20 +99,20 @@ function urlInstall($argv)
                 addTemplate($url);
                 break;
             default:
-                echo "# control url <install> <github-branch-url>  | for install module\n";
-                echo "# control url <create> <github-branch-url>  | for install template\n";
+                echo "# control url install <github-branch-url>  | for install library\n";
+                echo "# control url create <github-branch-url>  | for install template\n";
         }
     } else {
         echo "ERROR url\n";
-        echo "# control url <install> <github-branch-url>  | for install module\n";
-        echo "# control url <create> <github-branch-url>  | for install template\n";
+        echo "# control url install <github-branch-url>  | for install library\n";
+        echo "# control url create <github-branch-url>  | for install template\n";
     }
 }
 
 function installPackage($argv)
 {
     if (!isset($argv[2])) {
-        // install all modules from package.json
+        // install all package from package.json
         $package = getPackage();
         foreach ($package->package as $key => $pk) {
             addModule($pk->url, $key, $pk->version, true, false);
@@ -116,15 +121,41 @@ function installPackage($argv)
     }
 
     if (!isset($argv[2])) {
-        echo '# control install <package>';
+        echo '  # control install <library>' . PHP_EOL;
+        echo '  or' . PHP_EOL;
+        echo '  # control install <library>@<version>' . PHP_EOL;
         return;
     }
-    if (isset($argv[3])) {
-        $url = file_get_contents(baseUrl . 'module/' . $argv[2] . '/' . $argv[3]);
-        addModule($url, $argv[2], $argv['3']);
-    } else {
-        $url = file_get_contents(baseUrl . 'module/' . $argv[2]);
-        addModule($url, $argv[2]);
+    $package_list = [];
+
+    for ($i = 2; isset($argv[$i]); $i++) {
+        if (strpos($argv[$i], '@') !== false) {
+            [$module_name, $version] = explode('@', $argv[$i], 2);
+            $url = file_get_contents(baseUrl . 'module/' . $module_name . '/' . $version);
+
+            array_push($package_list, [
+                'name' => $module_name,
+                'version' => $version,
+                'url' => $url
+            ]);
+        } else {
+            $url = file_get_contents(baseUrl . 'module/' . $argv[$i]);
+
+            array_push($package_list, [
+                'name' => $argv[$i],
+                'version' => 'main',
+                'url' => $url
+            ]);
+        }
+    }
+    echo "this is library will installing \n\n";
+    foreach($package_list as $pkl) {
+        echo '  - ' . $pkl['name'] . '@' . $pkl['version'] . "  url - " . $pkl['url'] . PHP_EOL;
+    }
+    echo "\nAre you sure to install all? ( [Enter] to install, [ctrl + c] to cancel )\n";
+    readline();
+    foreach($package_list as $pkl) {
+        addModule($pkl['url'], $pkl['name'], $pkl['version'], asking: false);
     }
 }
 
@@ -132,11 +163,15 @@ function createTemplate($argv)
 {
 
     if (!isset($argv[2])) {
-        echo '# control create <package>';
+        echo '  # control create <template>' . PHP_EOL;
+        echo '  or' . PHP_EOL;
+        echo '  # control create <template@version>' . PHP_EOL;
         return;
     }
-    if (isset($argv[3])) {
-        $url = @file_get_contents(baseUrl . 'template/' . $argv[2] . '/' . $argv[3]);
+
+    if (strpos($argv[2], '@') !== false) {
+        [$template_name, $template_version] = explode('@', $argv[2], 2);
+        $url = @file_get_contents(baseUrl . 'template/' . $template_name . '/' . $template_version);
     } else {
         $url = @file_get_contents(baseUrl . 'template/' . $argv[2]);
     }
@@ -283,7 +318,7 @@ function addModule($url, $moduleName, $version = 'main', $has_modules = false, $
 
         savePackage($package);
     }
-    echo "installed successfully" . PHP_EOL;
+    echo "\ninstalled {$moduleName} successfully\n\n";
 }
 
 /************** Manage *********************** */
@@ -297,7 +332,7 @@ function update()
 // *********** init ************************** //
 function setInit($argv)
 {
-    $ex = strpos(__DIR__, '/') === false ? '\\': '/';
+    $ex = strpos(__DIR__, '/') === false ? '\\' : '/';
     $project_name = explode($ex, __DIR__);
     $project_name = $project_name[sizeof($project_name) - 1];
     if (isset($argv[2]) && $argv[2] == '-y') {
@@ -402,16 +437,16 @@ function Help()
     echo '  # control serve | to run server at localhost [not recommended]' . PHP_EOL . PHP_EOL;
 
     echo "\n--- package manage ---\n";
-    echo '  # control list | to show modules list' . PHP_EOL;
-    echo '  # control install | to install all modules from package.json ' . PHP_EOL;
-    echo '  # control install <module> | to install modules' . PHP_EOL;
-    echo '  # control install <module> <version> | to install modules with version' . PHP_EOL;
+    echo '  # control list | to show library list' . PHP_EOL;
+    echo '  # control install | to install all library from package.json ' . PHP_EOL;
+    echo '  # control install <library> | to install library' . PHP_EOL;
+    echo '  # control install <library>@<version> | to install library with version' . PHP_EOL;
     echo '  # control create <template> | to install template' . PHP_EOL;
-    echo '  # control create <template> <version> | to install template with version' . PHP_EOL;
-    echo '  # control remove <module> | to remove module' . PHP_EOL . PHP_EOL;
+    echo '  # control create <template@version> | to install template with version' . PHP_EOL;
+    echo '  # control remove <library> | to remove library' . PHP_EOL . PHP_EOL;
 
     echo "\n--- package from url ---\n";
-    echo "  # control url install <github-branch-url>  | for install module with github branch url\n";
+    echo "  # control url install <github-branch-url>  | for install library with github branch url\n";
     echo "  # control url create <github-branch-url>  | for install template with github branch url \n\n";
 
     echo "\n--- Github ---\n";

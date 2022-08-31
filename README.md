@@ -1,9 +1,9 @@
-# control for manage modules and template
-## [visit modules & template](https://package.anytion.com/package/)
+# control for manage library and template
+## [visit library & template](https://package.anytion.com/package/)
 
 ---
 
-### ตัวช่วยจัดการ Modules & template for PHP
+### ตัวช่วยจัดการ library & template for PHP
 
 [Docs](#docs)
 
@@ -31,7 +31,7 @@ file_put_contents('control', file_get_contents('https://raw.githubusercontent.co
 ## Docs
 
 ### What is control ?
-`control` คือตัวที่จะมาช่วยจัดการ `modules` และ `template` สำหรับ PHP โดยสามารถติดตั้ง modules ต่างๆ ผ่านคำสั่งได้เลย และ รวมไปถึงการลบ `modules` และการตั้งค่าสภาพแวดล้อมสำหรับ SPA
+`control` คือตัวที่จะมาช่วยจัดการ `library` และ `template` สำหรับ PHP โดยสามารถติดตั้ง library ต่างๆ ผ่านคำสั่งได้เลย และ รวมไปถึงการลบ `library` และการตั้งค่าสภาพแวดล้อมสำหรับ SPA
 นอกจากนั้นก็จะสามารถติดตั้ง `template` ได้ด้วยคำสั่งเช่นเดียวกัน
 
 ---
@@ -49,7 +49,7 @@ $$  How-to-use-!$$
 
 
 ### คำสั่งเกี่ยวกับ โปรเจค
-` # control init ` คือการสร้างไฟล์ `package.json` ที่จะเก็บข้อมูลต่างๆ และรวมไปถึง modules ที่ติดตั้งด้วย ซึ่งต้องใช้เป็นอย่างแรก
+` # control init ` คือการสร้างไฟล์ `package.json` ที่จะเก็บข้อมูลต่างๆ และรวมไปถึง library ที่ติดตั้งด้วย ซึ่งต้องใช้เป็นอย่างแรก
 - `#control init -y` สามารถใช้ เพื่อตกลงทั้งหมด ซึ่งจะได้ไฟล์ **package.json** ที่มีค่าเป็น default 
 
 `# control spa` คือการสร้างสภาพแวดล้อมของโปรเจคให้เป็นแบบ SPA โดยที่จะทำงานบนหน้า index.php เพียงหน้าเดียว
@@ -59,29 +59,37 @@ $$  How-to-use-!$$
 ` # control serve `  คือการรันเชิร๋ฟเวอร์โดยไม่ต้องใช้ xampp หรือ apache แต่ไม่แนะนำให้ใช้ ไม่ว่าอย่างไรก็ควรจะใช้ร่วมกับ xampp หรือ apache มากกว่า
 - `# control serve --port <port>` สามารถใช้ เพื่อกำหนด **port** ที่ต้องการได้ และยังเขียน `--port` ให้สั้นลงเหลือเพียง `-p` ได้
 
-### การจัดการ   modules
-`# control list` คือการดูรายชื่อ **modules** ที่ติดตั้งในโปรเจค
+### การจัดการ   library
+`# control list` คือการดูรายชื่อ **library** ที่ติดตั้งในโปรเจค
 
-`# control install` คือการติดตั้ง modules ตามรายการใน package.json 
+`# control install` คือการติดตั้ง library ตามรายการใน package.json 
 - สามารถเขียน `install` ให้สั้นลงเหลือ `i` ได้
 
 
-`# control install <module>`  แทน `<module>` ด้วยชื่อของ module ที่ต้องการติดตั้ง เป็นการติดตั้ง module ที่ระบุ
+`# control install <library>`  แทน `<library>` ด้วยชื่อของ library ที่ต้องการติดตั้ง เป็นการติดตั้ง library ที่ระบุ
 
-`# control install <module> <version>` สามารถระบุเวอร์ชั่นย่อยที่ต้องการติดตั้ง โดยแทน `<version>` ด้วย ชื่อของเวอร์ชั่นย่อยที่ต้องการ
+`# control install <library>@<version>` สามารถระบุเวอร์ชั่นย่อยที่ต้องการติดตั้ง โดยแทน `<version>` ด้วย ชื่อของเวอร์ชั่นย่อยที่ต้องการ เช่น
+
+- `# control install wisit-express@type`
+
+- สามารถติดตั้งพร้อมกันมากกว่าหนึ่ง library ได้ โดยเพิ่ม library ต่อท้ายไปเรื่อยๆ เช่น
+- `# control install <library> <library> <library>`  
+
+ตัวอย่างการใช้งานจริง
+- `# control install use-import wisit-express@type dotenv`  
 
 `# control create <template>` เป็นการติดตั้ง **template** โดยแทน `<template>` ด้วยชื่อของ template ที่ต้องการติดตั้ง
 
-`# control create <template> <version>` สามารถระบุเวอร์ชั่นย่อยของ **template** ได้ โดยแทน `<version>` ด้วยชื่อเวอร์ชั่นย่อยที่ต้องการ
+`# control create <template>@<version>` สามารถระบุเวอร์ชั่นย่อยของ **template** ได้ โดยแทน `<version>` ด้วยชื่อเวอร์ชั่นย่อยที่ต้องการ
 
-`# control remove <module>` เป็นการลบ module ที่เคยติดตั้งไปแล้ว โดยแทน `<module>` ด้วยชื่อ module ที่ต้องการลบ
+`# control remove <library>` เป็นการลบ library ที่เคยติดตั้งไปแล้ว โดยแทน `<library>` ด้วยชื่อ library ที่ต้องการลบ
 - สามารถเขียน `remove` ให้สั้นลงเหลือ `rm` ได้
 
 
-### ติดตั้ง modules จาก Url github
+### ติดตั้ง library จาก Url github
 
 #### สำคัญ ต้องใช้ Url ที่ระบุ branch ด้วย โดยคลิกเลือก branch ก่อนทำการ copy
 
-`# control url install <github-branch-url>` ติดตั้ง module โดยแทน `<github-branch-url>` ด้วย Url ที่คัดลอกมา
+`# control url install <github-branch-url>` ติดตั้ง library โดยแทน `<github-branch-url>` ด้วย Url ที่คัดลอกมา
 
 `# control url create <github-branch-url>`  ติดตั้ง template โดยแทน `<github-branch-url> ด้วย Url ที่คัดลอกมา
