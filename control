@@ -126,16 +126,36 @@ function installPackage($argv)
         echo '  # control install <library@version>' . PHP_EOL;
         return;
     }
+    $package_list = [];
 
     for ($i = 2; isset($argv[$i]); $i++) {
         if (strpos($argv[$i], '@') !== false) {
             [$module_name, $version] = explode('@', $argv[$i], 2);
             $url = file_get_contents(baseUrl . 'module/' . $module_name . '/' . $version);
-            addModule($url, $module_name, $version);
+
+            array_push($package_list, [
+                'name' => $module_name,
+                'version' => $version,
+                'url' => $url
+            ]);
         } else {
             $url = file_get_contents(baseUrl . 'module/' . $argv[$i]);
-            addModule($url, $argv[$i]);
+
+            array_push($package_list, [
+                'name' => $argv[$i],
+                'version' => 'main',
+                'url' => $url
+            ]);
         }
+    }
+    echo "this is library will installing \n\n";
+    foreach($package_list as $pkl) {
+        echo '  - ' . $pkl['name'] . '@' . $pkl['version'] . "  url - " . $pkl['url'] . PHP_EOL;
+    }
+    echo "\nAre you sure to install all? ( [Enter] to install, [ctrl + c] to cancel )\n";
+    readline();
+    foreach($package_list as $pkl) {
+        addModule($pkl['url'], $pkl['name'], $pkl['version'], asking: false);
     }
 }
 
@@ -298,7 +318,7 @@ function addModule($url, $moduleName, $version = 'main', $has_modules = false, $
 
         savePackage($package);
     }
-    echo "installed successfully" . PHP_EOL;
+    echo "\ninstalled {$moduleName} successfully\n\n";
 }
 
 /************** Manage *********************** */
