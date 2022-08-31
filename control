@@ -5,7 +5,7 @@
     * LICENSE file in the root directory of this source tree.
 */
 
-/*  * Control version 0.1.1 (Beta)
+/*  * Control version 0.1.1 
     * Github : https://github.com/Arikato111/control
 */
 
@@ -112,7 +112,7 @@ function urlInstall($argv)
 function installPackage($argv)
 {
     if (!isset($argv[2])) {
-        // install all modules from package.json
+        // install all package from package.json
         $package = getPackage();
         foreach ($package->package as $key => $pk) {
             addModule($pk->url, $key, $pk->version, true, false);
@@ -123,7 +123,7 @@ function installPackage($argv)
     if (!isset($argv[2])) {
         echo '  # control install <library>' . PHP_EOL;
         echo '  or' . PHP_EOL;
-        echo '  # control install <library@version>' . PHP_EOL;
+        echo '  # control install <library>@<version>' . PHP_EOL;
         return;
     }
     $package_list = [];
@@ -440,7 +440,7 @@ function Help()
     echo '  # control list | to show library list' . PHP_EOL;
     echo '  # control install | to install all library from package.json ' . PHP_EOL;
     echo '  # control install <library> | to install library' . PHP_EOL;
-    echo '  # control install <library@version> | to install library with version' . PHP_EOL;
+    echo '  # control install <library>@<version> | to install library with version' . PHP_EOL;
     echo '  # control create <template> | to install template' . PHP_EOL;
     echo '  # control create <template@version> | to install template with version' . PHP_EOL;
     echo '  # control remove <library> | to remove library' . PHP_EOL . PHP_EOL;
