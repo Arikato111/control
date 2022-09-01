@@ -1,5 +1,6 @@
-# control for manage library and template
-## [visit library & template](https://package.anytion.com/package/)
+# control
+## for manage library and template
+### ดูชื่อและรายละเอียดของ library และ template ต่างๆ ได้ที่ [package.anytion](https://package.anytion.com/package/)
 
 ---
 
