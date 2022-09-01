@@ -214,6 +214,7 @@ function getPackage()
         exit;
     }
     $package = json_decode(file_get_contents('./package.json'));
+    if(!isset($package->package)) $package->package = (object)[];
     return $package;
 }
 
