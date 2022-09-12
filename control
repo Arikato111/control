@@ -263,7 +263,14 @@ function addTemplate($url)
             echo "ERROR!! Not know mode";
         }
     }
-    unlink('README.md');
+    
+    $ex = strpos(__DIR__, '/') === false ? '\\' : '/';
+    $project_name = explode($ex, __DIR__);
+    $project_name = $project_name[sizeof($project_name) - 1];
+    $package = getPackage();
+    $package->name = $project_name;
+    savePackage($package);
+    
     echo "install successfuly\n";
 }
 
