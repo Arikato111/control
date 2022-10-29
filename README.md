@@ -15,6 +15,14 @@
 ## Get started
 
 ### ติดตั้ง
+
+- ### ผ่าน cmd หรือ powershell
+- คัดลอกคำสั่งด้านล่าง แล้วรันบน cmd หรือ powershell
+```
+curl https://raw.githubusercontent.com/Arikato111/control/master/control -O control
+```
+
+
 - #### ใช้งานผ่านออนไลน์ สร้างไฟล์ชื่อ `control` ในโฟลเดอร์โปรเจค แล้วนำโค้ดด้านล่างไปวาง ก็สามารถใช้ได้เลย
 ```php
 <?php
