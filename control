@@ -155,7 +155,7 @@ function installPackage($argv)
     echo "\nAre you sure to install all? ( [Enter] to install, [ctrl + c] to cancel )\n";
     readline();
     foreach($package_list as $pkl) {
-        addModule($pkl['url'], $pkl['name'], $pkl['version'], asking: false);
+        addModule($pkl['url'], $pkl['name'], $pkl['version'], false, false);
     }
 }
 
