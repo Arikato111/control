@@ -16,10 +16,10 @@
 
 ### ติดตั้ง
 
-- ### ผ่าน cmd หรือ powershell
-- คัดลอกคำสั่งด้านล่าง แล้วรันบน cmd หรือ powershell
+- ### ผ่าน bash, cmd หรือ powershell
+- คัดลอกคำสั่งด้านล่าง แล้วรันบน bash, cmd หรือ powershell
 ```
-curl https://raw.githubusercontent.com/Arikato111/control/master/control -O control
+curl https://raw.githubusercontent.com/Arikato111/control/master/control -o control
 ```
 
 
