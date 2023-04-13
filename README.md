@@ -18,8 +18,15 @@
 
 ### ติดตั้ง
 
-- ### ผ่าน bash, cmd หรือ powershell
-- คัดลอกคำสั่งด้านล่าง แล้วรันบน bash, cmd หรือ powershell
+ในการติดตั้งนั้น จะทำการสร้างไฟล์ `control` ลงบนโฟลเดอร์ของโปรเจค จากนั้นจะทำการรัน ไฟล์ `control` ด้วย `php` 
+
+- ### ติดตั้ง php เพื่อใช้งานผ่าน command line
+  - #### windows และ xampp สามารถทำการเพิ่ม path environment ได้โดยเพิ่ม `C:\xampp\php` 
+
+  - #### linux ทำการรันคำสั่ง `sudo apt install php8.1-cli` เพื่อติดตั้ง
+
+- ### ติดตั้ง control ผ่าน bash, cmd หรือ powershell
+- คัดลอกคำสั่งด้านล่าง แล้วรันบน bash, cmd หรือ powershell ในโฟลเดอร์ของโปรเจค
 ```
 curl https://raw.githubusercontent.com/Arikato111/control/master/control -o control
 ```
@@ -111,6 +118,8 @@ $$  How-to-use-!$$
 โดยที่ ltp นั้นจะทำการติดตั้งเพียงครั้งเดียวและสามารถใช้ได้โดยไม่ต้องติดตั้งหรือโหลด `control` ซ้ำ นอกจากนั้นยังทำให้คำสั่งสั้นลง จาก `php control` เหลือเพียง `ltp` เช่น การติดตั้ง package จากเดิมที่ใช้ `php control install <package>` จะเหลือเพียง `ltp install <package>`
 
 ### การติดตั้ง ltp
+
+- #### linux ทำการรันคำสั่ง `sudo apt install php8.1-cli` เพื่อติดตั้ง php ที่ใช้ผ่าน command line
 
 - คัดลอกโค้ดด้านล่างแล้วรันบน terminal 
 -  หรือสามารถรันโค้ดจาก `linux_installer.sh` ก็ได้
