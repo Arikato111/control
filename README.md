@@ -119,7 +119,7 @@ $$  How-to-use-!$$
 
 ### การติดตั้ง ltp
 
-- #### linux ทำการรันคำสั่ง `sudo apt install php8.1-cli` เพื่อติดตั้ง php ที่ใช้ผ่าน command line
+- ทำการรันคำสั่ง `sudo apt install php8.1-cli` เพื่อติดตั้ง php ที่ใช้ผ่าน command line
 
 - คัดลอกโค้ดด้านล่างแล้วรันบน terminal 
 -  หรือสามารถรันโค้ดจาก `linux_installer.sh` ก็ได้
