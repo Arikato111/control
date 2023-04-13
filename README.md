@@ -10,6 +10,8 @@
 
 [Get started](#get-started)
 
+[For linux](#for-linux)
+
 ---
 
 ## Get started
@@ -102,3 +104,19 @@ $$  How-to-use-!$$
 `# control url install <github-branch-url>` ติดตั้ง library โดยแทน `<github-branch-url>` ด้วย Url ที่คัดลอกมา
 
 `# control url create <github-branch-url>`  ติดตั้ง template โดยแทน `<github-branch-url> ด้วย Url ที่คัดลอกมา
+
+### For Linux
+
+สำหรับใครที่ใช้ Linux สามารถใช้ ltp ได้ 
+โดยที่ ltp นั้นจะทำการติดตั้งเพียงครั้งเดียวและสามารถใช้ได้โดยไม่ต้องติดตั้งหรือโหลด `control` ซ้ำ นอกจากนั้นยังทำให้คำสั่งสั้นลง จาก `php control` เหลือเพียง `ltp` เช่น การติดตั้ง package จากเดิมที่ใช้ `php control install <package>` จะเหลือเพียง `ltp install <package>`
+
+### การติดตั้ง ltp
+
+- คัดลอกโค้ดด้านล่างแล้วรันบน terminal
+
+```bash
+curl -o- https://raw.githubusercontent.com/Arikato111/control/master/linux_installer.sh | bash
+```
+```bash
+wget -qO- https://raw.githubusercontent.com/Arikato111/control/master/linux_installer.sh | bash
+```
