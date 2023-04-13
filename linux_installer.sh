@@ -1,5 +1,6 @@
-mkdir $HOME/.control
-curl https://raw.githubusercontent.com/Arikato111/control/ltp/control >> $HOME/.control/control
-curl https://raw.githubusercontent.com/Arikato111/control/ltp/ltp >> $HOME/.control/ltp
-echo "export PATH=\$PATH:$HOME/.control" >> $HOME/.bashrc
-sudo chmod +x $HOME/.control/ltp
+mkdir $HOME/.ltp
+curl https://raw.githubusercontent.com/Arikato111/control/ltp/control >> $HOME/.ltp/control
+curl https://raw.githubusercontent.com/Arikato111/control/ltp/ltp >> $HOME/.ltp/ltp
+echo "export PATH=\$PATH:$HOME/.ltp" >> $HOME/.bashrc
+echo "allow excute ltp file in ./ltp/ltp";
+sudo chmod +x $HOME/.ltp/ltp

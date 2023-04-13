@@ -4,4 +4,4 @@ do
     # echo "Username - $i: $user";
     i+=" "$user;
 done
-php $HOME/.ltp/.control $i;
+php $HOME/.ltp/control $i;
