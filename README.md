@@ -112,7 +112,8 @@ $$  How-to-use-!$$
 
 ### การติดตั้ง ltp
 
-- คัดลอกโค้ดด้านล่างแล้วรันบน terminal
+- คัดลอกโค้ดด้านล่างแล้วรันบน terminal 
+-  หรือสามารถรันโค้ดจาก `linux_installer.sh` ก็ได้
 
 ```bash
 curl -o- https://raw.githubusercontent.com/Arikato111/control/master/linux_installer.sh | bash
@@ -120,3 +121,7 @@ curl -o- https://raw.githubusercontent.com/Arikato111/control/master/linux_insta
 ```bash
 wget -qO- https://raw.githubusercontent.com/Arikato111/control/master/linux_installer.sh | bash
 ```
+
+- เมื่อทำการติดตั้งเสร็จแล้ว ให้ทำการปิด terminal แล้วเปิดขึ้นใหม่ จากนั้นรันคำสั่ง `ltp -v` เพื่อเช็คการตัดตั้ง
+
+- ปล. การติดตั้งนี้ใช้ได้เฉพาะกับ **bash**
