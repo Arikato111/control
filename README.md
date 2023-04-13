@@ -115,5 +115,8 @@ $$  How-to-use-!$$
 - คัดลอกโค้ดด้านล่างแล้วรันบน terminal
 
 ```bash
-code here
+curl -o- https://raw.githubusercontent.com/Arikato111/control/master/linux_installer.sh | bash
+```
+```bash
+wget -qO- https://raw.githubusercontent.com/Arikato111/control/master/linux_installer.sh | bash
 ```
