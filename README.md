@@ -112,6 +112,8 @@ $$  How-to-use-!$$
 
 `# control url create <github-branch-url>`  ติดตั้ง template โดยแทน `<github-branch-url> ด้วย Url ที่คัดลอกมา
 
+---
+
 ### For Linux
 
 สำหรับใครที่ใช้ Linux สามารถใช้ ltp ได้ 
