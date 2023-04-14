@@ -9,8 +9,8 @@ idx=0
 first="${args:0:6}"
 if [ $first == "update" ]
 then
-    curl https://raw.githubusercontent.com/Arikato111/control/master/control >> $HOME/.ltp/control
-    curl https://raw.githubusercontent.com/Arikato111/control/master/ltp >> $HOME/.ltp/ltp
+    curl https://raw.githubusercontent.com/Arikato111/control/master/control > $HOME/.ltp/control
+    curl https://raw.githubusercontent.com/Arikato111/control/master/ltp > $HOME/.ltp/ltp
 else
     php $HOME/.ltp/control $i;
 fi
