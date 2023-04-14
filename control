@@ -5,13 +5,14 @@
     * LICENSE file in the root directory of this source tree.
 */
 
-/*  * Control version 0.1.1 
+/*  * Control version 0.1.2 
     * Github : https://github.com/Arikato111/control
 */
 
 /*  * What's new !
-    * update installing package (library & template)
-    * change input when install to <library@version> and <template@version>
+    * Change report status when do something
+    * ltp support update
+    * add -h to show manual
 */
 
 define('CONTROL_VERSION', '0.1.2');
