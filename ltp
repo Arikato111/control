@@ -4,4 +4,14 @@ do
     # echo "Username - $i: $user";
     i+=" "$user;
 done
-php $HOME/.ltp/control $i;
+args=$@
+idx=0
+first="${args:0:6}"
+echo $first
+if [ $first == "update" ]
+then
+    curl https://raw.githubusercontent.com/Arikato111/control/master/control >> $HOME/.ltp/control
+    curl https://raw.githubusercontent.com/Arikato111/control/master/ltp >> $HOME/.ltp/ltp
+else
+php ./control $i;
+fi
