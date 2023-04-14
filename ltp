@@ -13,5 +13,5 @@ then
     curl https://raw.githubusercontent.com/Arikato111/control/master/control >> $HOME/.ltp/control
     curl https://raw.githubusercontent.com/Arikato111/control/master/ltp >> $HOME/.ltp/ltp
 else
-php ./control $i;
+php $HOME/.ltp/control $i;
 fi
