@@ -6,7 +6,12 @@ do
 done
 args=$@
 idx=0
+
+if [ ${#args} -lt 7 ]
+then
 first="${args:0:6}"
+fi
+
 if [ $first == "update" ]
 then
     curl https://raw.githubusercontent.com/Arikato111/control/master/control > $HOME/.ltp/control
