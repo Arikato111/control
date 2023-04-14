@@ -12,7 +12,7 @@ then
 first="${args:0:6}"
 fi
 
-if [ $first == "update" ]
+if [ "$first" == "update" ]
 then
     curl https://raw.githubusercontent.com/Arikato111/control/master/control > $HOME/.ltp/control
     curl https://raw.githubusercontent.com/Arikato111/control/master/ltp > $HOME/.ltp/ltp
