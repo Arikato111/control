@@ -5,17 +5,21 @@
     * LICENSE file in the root directory of this source tree.
 */
 
-/*  * Control version 0.1.2 
+/*  * Control version 0.1.3 
     * Github : https://github.com/Arikato111/control
 */
 
-/*  * What's new !
-    * Change report status when do something
-    * ltp support update
-    * add -h to show manual
+/*  ! What's new !
+    * v1.0.3
+     - run scripts command in package.json
+
+    * v1.0.2
+     - Change report status when do something
+     - ltp support update
+     - add -h to show manual
 */
 
-define('CONTROL_VERSION', '0.1.2');
+define('CONTROL_VERSION', '0.1.3');
 define('baseUrl', 'https://package.anytion.com/install/');
 
 ini_set('user_agent', '3lcieh2dfbon3032a');
@@ -61,7 +65,12 @@ if (isset($argv[1])) {
             Help();
             break;
         default:
-            echo 'command not found';
+            $package = getPackage();
+            if (isset($package->scripts) && isset($package->scripts->{$argv[1]})) {
+                system($package->scripts->{$argv[1]}, $output);
+            } else {
+                echo 'command not found';
+            }
     }
 } else {
     Help();
@@ -190,7 +199,7 @@ function createTemplate($argv)
     }
 
     if (empty($url)) {
-        echo "- !! Error not found template: ". $argv[2] ." \n";
+        echo "- !! Error not found template: " . $argv[2] . " \n";
         exit;
     }
 
@@ -474,7 +483,10 @@ function Help()
 
     echo "\n--- package from url ---\n";
     echo "  # control url install <github-branch-url>  | for install library with github branch url\n";
-    echo "  # control url create <github-branch-url>  | for install template with github branch url \n\n";
+    echo "  # control url create <github-branch-url>  | for install template with github branch url \n";
+
+    echo "\n--- run scripts ---\n";
+    echo "  # control <script>  | for run scripts command in package.json\n";
 
     echo "\n--- Github ---\n";
     echo "  Github url | https://github.com/Arikato111/control\n";
