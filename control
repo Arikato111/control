@@ -65,12 +65,14 @@ if (isset($argv[1])) {
             Help();
             break;
         default:
-            $package = getPackage();
-            if (isset($package->scripts) && isset($package->scripts->{$argv[1]})) {
-                system($package->scripts->{$argv[1]}, $output);
-            } else {
-                echo 'command not found';
+            if (file_exists('./package.json')) {
+                $package = getPackage();
+                if (isset($package->scripts) && isset($package->scripts->{$argv[1]})) {
+                    system($package->scripts->{$argv[1]}, $output);
+                    die;
+                }
             }
+            echo 'command not found';
     }
 } else {
     Help();
