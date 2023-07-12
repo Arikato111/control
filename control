@@ -10,6 +10,9 @@
 */
 
 /*  ! What's new !
+    * v1.0.5
+     - Change display when check packages list.
+    ! What's new !
     * v1.0.4
      - Two or more packages can be deleted at one time..
      - change report when install template.
@@ -18,13 +21,9 @@
     * v1.0.3
      - run scripts command in package.json
 
-    * v1.0.2
-     - Change report status when do something
-     - ltp support update
-     - add -h to show manual
 */
 
-define('CONTROL_VERSION', '0.1.4');
+define('CONTROL_VERSION', '0.1.5');
 define('baseUrl', 'https://package.anytion.com/install/');
 
 ini_set('user_agent', '3lcieh2dfbon3032a');
@@ -87,9 +86,16 @@ function ShowListPackage()
 {
     $package = getPackage();
     $data = $package->package;
+    $count = count(array_keys(get_object_vars($data)));
+    print($package->name . "@" . ($package->version ?? "") . " " . __DIR__);
+    print("\n");
     foreach ($data as $key => $pk) {
-        echo "~@ {$key} :^{$pk->version}\n";
+        if ($count != 1)
+            echo "├─── {$key} @{$pk->version}\n";
+        else echo "└─── {$key} @{$pk->version}\n";
+        $count--;
     }
+    print("\n");
 }
 
 function urlInstall($argv)
