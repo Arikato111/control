@@ -25,16 +25,32 @@
 
 define('CONTROL_VERSION', '0.1.5');
 define('baseUrl', 'https://package.anytion.com/install/');
+define('CONFIRM_INSTALL', false);
 
 ini_set('user_agent', '3lcieh2dfbon3032a');
 
-if (isset($argv[1])) {
-    switch ($argv[1]) {
+$GLOBALS['command'] = [];
+$GLOBALS['option'] = [];
+
+/*********** Command & Option ***************/
+for ($i = 1; $i < count($argv); $i++) {
+    $input = $argv[$i];
+    if (str_split($argv[$i])[0] == '-') {
+        array_push($GLOBALS['option'], $argv[$i]);
+    } else {
+        array_push($GLOBALS['command'], $argv[$i]);
+    }
+}
+/*******************************************/
+
+
+if (isset($GLOBALS['command'][0])) {
+    switch ($GLOBALS['command'][0]) {
         case 'list':
             ShowListPackage();
             break;
         case 'serve':
-            runServer($argv);
+            runServer();
             break;
         case 'install':
         case 'i':
@@ -134,13 +150,13 @@ function urlInstall($argv)
     }
 }
 
-function installPackage($argv)
+function installPackage()
 {
-    if (!isset($argv[2])) {
+    if (!isset($GLOBALS['command'][1])) {
         // install all package from package.json
         $package = getPackage();
         if (!(key($package->package) ?? false)) {
-            echo "no any package to install";
+            echo "no any package to install\n";
             return;
         }
         foreach ($package->package as $key => $pk) {
@@ -151,44 +167,61 @@ function installPackage($argv)
 
     $package_list = [];
 
-    for ($i = 2; isset($argv[$i]); $i++) {
+    for ($i = 1; isset($GLOBALS['command'][$i]); $i++) {
         $errorReport = " - !! Error not found: ";
-        if (strpos($argv[$i], '@') !== false) {
-            [$module_name, $version] = explode('@', $argv[$i], 2);
+
+        // check is main package or not with @
+        if (strpos($GLOBALS['command'][$i], '@') !== false) {
+            // if it's not main package split command
+            // package-name@version     
+            [$module_name, $version] = explode('@', $GLOBALS['command'][$i], 2);
+            // get github repository from server
             $url = file_get_contents(baseUrl . 'module/' . $module_name . '/' . $version);
 
             # check found package
             if (!($url ?? false)) {
-                echo $errorReport . $argv[$i] . PHP_EOL;
+                // if url from server is emty It mean server has no this package
+                echo $errorReport . $GLOBALS['command'][$i] . PHP_EOL;
                 die;
             }
 
             array_push($package_list, [
+                // add package detail to object from package.json
                 'name' => $module_name,
                 'version' => $version,
                 'url' => $url
             ]);
         } else {
-            $url = file_get_contents(baseUrl . 'module/' . $argv[$i]);
+            // if it's main version ( without '@' in command)
+            // get github repository from server
+            $url = file_get_contents(baseUrl . 'module/' . $GLOBALS['command'][$i]);
 
             if (!($url ?? false)) {
-                echo $errorReport . $argv[$i] . PHP_EOL;
+                // if url emty it mean server has no this package
+                echo $errorReport . $GLOBALS['command'][$i] . PHP_EOL;
                 die;
             }
 
             array_push($package_list, [
-                'name' => $argv[$i],
+                // add package detail to object from package.json
+                'name' => $GLOBALS['command'][$i],
                 'version' => 'main',
                 'url' => $url
             ]);
         }
     }
-    echo "this is library will installing \n\n";
+    echo "this is library will installing \n";
+    // report repositories detail before installing
     foreach ($package_list as $pkl) {
         echo '  - ' . $pkl['name'] . '@' . $pkl['version'] . "  url - " . $pkl['url'] . PHP_EOL;
     }
-    echo "\nAre you sure to install all? ( [Enter] to install, [ctrl + c] to cancel )\n";
-    readline();
+    echo "\n";
+    // confirm before installing 
+    // can turn off with constant variable 
+    if (CONFIRM_INSTALL) {
+        echo "\nAre you sure to install all? ( [Enter] to install, [ctrl + c] to cancel )\n";
+        readline();
+    }
     foreach ($package_list as $pkl) {
         addModule($pkl['url'], $pkl['name'], $pkl['version'], false, false);
     }
@@ -262,7 +295,7 @@ function getPackage()
 {
     if (!file_exists('./package.json')) {
         echo "Not found package.json\n";
-        echo '# control init | to create package.json';
+        echo "# control init | to create package.json\n";
         exit;
     }
     $package = json_decode(file_get_contents('./package.json'));
@@ -350,7 +383,8 @@ function addModule($url, $moduleName, $version = 'main', $has_modules = false, $
         return;
     }
     $jo = json_decode($json);
-    mkdir('./modules/' . $moduleName);
+    if (!file_exists('./modules/' . $moduleName))
+        mkdir('./modules/' . $moduleName);
     $tree = $jo->tree;
     $url = str_replace('git/trees/', '/', $url);
     $url = str_replace('https://api.github.com/repos', 'https://raw.githubusercontent.com', $url);
@@ -361,6 +395,7 @@ function addModule($url, $moduleName, $version = 'main', $has_modules = false, $
             echo "installing file: -> $moduleName/{$value->path}\n";
             @file_put_contents("modules/$moduleName/" . $value->path, $file);
         } else if ($value->mode == "040000") {
+            if (file_exists("modules/$moduleName/" . $value->path)) continue;
             echo "create directory ./modules/$moduleName/{$value->path}\n";
             mkdir("modules/$moduleName/" . $value->path);
         } else {
@@ -432,29 +467,23 @@ function setInit($argv)
 }
 
 /********************************************* */
-function runServer($argv)
+function runServer()
 {
-    if (isset($argv[2])) {
-        switch ($argv[2]) {
-            case '-p':
-            case '--port':
-                if (!isset($argv[3])) {
-                    echo 'Please insert port number' . PHP_EOL;
-                    echo "  # control serve --port <port>\n";
-                    exit;
-                }
-                $port = $argv[3];
-                break;
-            default:
-                echo 'Not found commant ' . $argv[2];
-                exit;
+    $port = 3000;
+    if (in_array("-p", $GLOBALS['option']) || in_array("--port", $GLOBALS['option'])) {
+        if ($GLOBALS['command'][1] ?? false) {
+            $port = (int) $GLOBALS['command'][1];
+        } else {
+            echo 'Please insert port number' . PHP_EOL;
+            echo "  # control serve --port <port>\n";
+            exit;
         }
-    } else {
-        $port = 3000;
     }
-    while (true) {
+    $limit_try = 10;
+    while ($limit_try) {
         @exec("php -S localhost:{$port}");
         $port++;
+        $limit_try--;
     }
 }
 
