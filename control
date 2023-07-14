@@ -54,13 +54,13 @@ if (isset($GLOBALS['command'][0])) {
             break;
         case 'install':
         case 'i':
-            installPackage($argv);
+            installPackage();
             break;
         case 'url':
             urlInstall();
             break;
         case 'create':
-            createTemplate($argv);
+            createTemplate();
             break;
         case 'rm':
         case 'remove':
@@ -134,7 +134,7 @@ function urlInstall()
         switch ($GLOBALS['command'][1]) {
             case 'i':
             case 'install':
-                addModule($url, $name);
+                addModule($url, $name, asking: CONFIRM_INSTALL);
                 break;
             case 'create':
                 addTemplate($url);
@@ -227,25 +227,25 @@ function installPackage()
     }
 }
 
-function createTemplate($argv)
+function createTemplate()
 {
 
-    if (!isset($argv[2])) {
+    if (!isset($GLOBALS['command'][1])) {
         echo '  # control create <template>' . PHP_EOL;
         echo '  or' . PHP_EOL;
         echo '  # control create <template@version>' . PHP_EOL;
         return;
     }
 
-    if (strpos($argv[2], '@') !== false) {
-        [$template_name, $template_version] = explode('@', $argv[2], 2);
+    if (strpos($GLOBALS['command'][1], '@') !== false) {
+        [$template_name, $template_version] = explode('@', $GLOBALS['command'][1], 2);
         $url = @file_get_contents(baseUrl . 'template/' . $template_name . '/' . $template_version);
     } else {
-        $url = @file_get_contents(baseUrl . 'template/' . $argv[2]);
+        $url = @file_get_contents(baseUrl . 'template/' . $GLOBALS['command'][1]);
     }
 
     if (empty($url)) {
-        echo "- !! Error not found template: " . $argv[2] . " \n";
+        echo "- !! Error not found template: " . $GLOBALS['command'][1] . " \n";
         exit;
     }
 
