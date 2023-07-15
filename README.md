@@ -1,16 +1,22 @@
-# control
-## for manage library and template
-### ดูชื่อและรายละเอียดของ library และ template ต่างๆ ได้ที่ [package.anytion](https://package.anytion.com/package/)
+<p align="center">
+  <img height="30" width="40" src="https://github.com/Arikato111/Arikato111/raw/main/icons/php-plain.svg">
+</p>
+
+# <p align="center">control</p>
+
+ตัวช่วยจัดการ library & template for PHP
+
+ดูชื่อและรายละเอียดของ library และ template ต่างๆ ได้ที่ [package.anytion](https://package.anytion.com/package/)
 
 ---
 
-### ตัวช่วยจัดการ library & template for PHP
+### Menu
 
-[Docs](#docs)
+- [Docs](#docs)
 
-[Get started](#get-started)
+- [Get started](#get-started)
 
-[For linux](#for-linux)
+- [For linux](#for-linux)
 
 ---
 
