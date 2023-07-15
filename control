@@ -376,7 +376,7 @@ function addTemplate($url, $projectPath = './')
         $package->name = $GLOBALS['command'][2];
         savePackage($package, $GLOBALS['command'][2]);
         echo "install successfuly\n\n";
-        echo "cd " . $GLOBALS['command'][2];
+        echo "cd " . $GLOBALS['command'][2] . "\n\n";
     } else {
         $package = getPackage();
         $package->name = $project_name;
