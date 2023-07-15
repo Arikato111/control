@@ -73,7 +73,7 @@ if (isset($GLOBALS['command'][0])) {
             setInit();
             break;
         case 'use':
-            setSPA();
+            using();
             break;
         case 'update':
             update();
