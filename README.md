@@ -4,6 +4,15 @@
 
 # <p align="center">control</p>
 
+<p align="center">
+  <img alt="Github License" src="https://img.shields.io/github/license/Arikato111/control" />
+  <img alt="GitHub Issues" src="https://img.shields.io/github/issues/Arikato111/control" />
+  <img alt="GitHub Pull Requests" src="https://img.shields.io/github/issues-pr/Arikato111/control" />
+  <img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/Arikato111/control" />
+  <img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/Arikato111/control" />
+  <img alt="" src="https://img.shields.io/github/repo-size/Arikato111/control" />
+</p>
+
 ตัวช่วยจัดการ library & template for PHP
 
 ดูชื่อและรายละเอียดของ library และ template ต่างๆ ได้ที่ [package.anytion](https://package.anytion.com/package/)
