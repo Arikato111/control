@@ -5,25 +5,28 @@
     * LICENSE file in the root directory of this source tree.
 */
 
-/*  * Control version 0.1.4 
+/*  * Control version 1.0.0 
     * Github : https://github.com/Arikato111/control
 */
 
 /*  ! What's new !
-    * v1.0.5
+    # v1.0.0
+     - refactor command and option for flexible position of argv
+
+    * v0.0.5
      - Change display when check packages list.
-    ! What's new !
-    * v1.0.4
+
+    * v0.0.4
      - Two or more packages can be deleted at one time..
      - change report when install template.
      - remove input license when init project.
 
-    * v1.0.3
+    * v0.0.3
      - run scripts command in package.json
 
 */
 
-define('CONTROL_VERSION', '0.1.5');
+define('CONTROL_VERSION', '1.0.0');
 define('baseUrl', 'https://package.anytion.com/install/');
 define('CONFIRM_INSTALL', false);
 
@@ -64,35 +67,34 @@ if (isset($GLOBALS['command'][0])) {
             break;
         case 'rm':
         case 'remove':
-            readyToRemoveModule($argv);
+            readyToRemoveModule();
             break;
         case 'init':
-            setInit($argv);
+            setInit();
             break;
-        case 'spa':
+        case 'use':
             setSPA();
-            break;
-        case '-v':
-        case '--version':
-            echo CONTROL_VERSION . PHP_EOL;
             break;
         case 'update':
             update();
             break;
-        case 'help':
-        case '-h':
-        case '--help':
-            Help();
-            break;
         default:
+            if (in_array('-v', $GLOBALS['option']) || in_array('--version', $GLOBALS['option'])) {
+                echo CONTROL_VERSION . PHP_EOL;
+                die;
+            } elseif (in_array('-h', $GLOBALS['option']) || in_array('--help', $GLOBALS['option'])) {
+                Help();
+                die;
+            }
             if (file_exists('./package.json')) {
+                // run scripts command on package.json
                 $package = getPackage();
-                if (isset($package->scripts) && isset($package->scripts->{$argv[1]})) {
-                    system($package->scripts->{$argv[1]}, $output);
+                if (isset($package->scripts) && isset($package->scripts->{$GLOBALS['command'][0]})) {
+                    system($package->scripts->{$GLOBALS['command'][0]}, $output);
                     die;
                 }
             }
-            echo 'command not found';
+            echo "command not found\n";
     }
 } else {
     Help();
@@ -267,10 +269,10 @@ function deleteAllInDir(string $dir): void
     }
 }
 
-function readyToRemoveModule($argv)
+function readyToRemoveModule()
 {
-    for ($i = 2; isset($argv[$i]); $i++) {
-        removeModule($argv[$i]);
+    for ($i = 1; isset($GLOBALS['command'][$i]); $i++) {
+        removeModule($GLOBALS['command'][$i]);
     }
 }
 
@@ -426,12 +428,12 @@ function update()
 }
 
 // *********** init ************************** //
-function setInit($argv)
+function setInit()
 {
     $ex = strpos(__DIR__, '/') === false ? '\\' : '/';
     $project_name = explode($ex, __DIR__);
     $project_name = $project_name[sizeof($project_name) - 1];
-    if (isset($argv[2]) && $argv[2] == '-y') {
+    if (in_array('-y', $GLOBALS['option'])) {
         $json_format =
             '{
     "name": "' . $project_name . '",
@@ -491,6 +493,28 @@ function runServer()
     }
 }
 
+function using()
+{
+    $using_help = function () {
+        echo "not found command\n";
+        echo "# control use <comand> | ['spa']\n";
+    };
+
+    if (isset($GLOBALS['command'][1])) {
+        switch ($GLOBALS['command'][1]) {
+            case 'spa':
+                setSPA();
+                break;
+
+            default:
+                $using_help();
+                break;
+        }
+    } else {
+        $using_help();
+    }
+}
+
 function setSPA()
 {
     file_put_contents(
@@ -517,7 +541,7 @@ function Help()
     echo '  # control -v | to check vertion of `control`' . PHP_EOL;
     echo "\n--- Project ---\n";
     echo '  # control init | to set project and create package.json ' . PHP_EOL;
-    echo '  # control spa | to set project as spa' . PHP_EOL;
+    echo '  # control use spa | to set project as spa' . PHP_EOL;
     echo '  # control update | for update control ' . PHP_EOL;
     echo '  # control serve | to run server at localhost [not recommended]' . PHP_EOL . PHP_EOL;
 
