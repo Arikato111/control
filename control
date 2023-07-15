@@ -250,8 +250,17 @@ function createTemplate()
         echo "- !! Error not found template: " . $GLOBALS['command'][1] . " \n";
         exit;
     }
-
-    addTemplate($url);
+    if (isset($GLOBALS['command'][2])) {
+        if (!file_exists($GLOBALS['command'][2])) {
+            mkdir($GLOBALS['command'][2]);
+            addTemplate($url, $GLOBALS['command'][2] . '/');
+        } else {
+            echo "this project has already used please change your project name\n";
+            die;
+        }
+    } else {
+        addTemplate($url);
+    }
 }
 
 function deleteAllInDir(string $dir): void
@@ -293,28 +302,34 @@ function removeModule($module_name)
     echo "remove {$module_name} successfuly\n";
 }
 
-function getPackage()
+function getPackage($projectName = false)
 {
-    if (!file_exists('./package.json')) {
+
+    $package_path = $projectName ? './' . $projectName . "/package.json" : "./package.json";
+    if (!file_exists($package_path)) {
         echo "Not found package.json\n";
         echo "# control init | to create package.json\n";
         exit;
     }
-    $package = json_decode(file_get_contents('./package.json'));
+    $package = json_decode(file_get_contents($package_path));
     if (!isset($package->package)) $package->package = (object)[];
     return $package;
 }
 
-function savePackage($package)
+function savePackage($package, $projectName = false)
 {
     $package_json = json_encode($package, JSON_PRETTY_PRINT);
     $package_json = str_replace('\/', '/', $package_json);
-    file_put_contents('./package.json', $package_json);
+    if ($projectName) {
+        file_put_contents($projectName . '/package.json', $package_json);
+    } else {
+        file_put_contents('./package.json', $package_json);
+    }
 }
 
 /************** Manage *********************** */
 
-function addTemplate($url)
+function addTemplate($url, $projectPath = './')
 {
 
     echo "installing template from github url : '$url'\n";
@@ -322,6 +337,7 @@ function addTemplate($url)
         echo "Do you want to install? ( [Enter] to install, [ctrl + c] to cancel )\n";
         readline(": ");
     }
+    echo "\n";
 
     $url = str_replace('https://github.com/', 'https://api.github.com/repos/', $url);
     $url = str_replace('tree', 'git/trees', $url);
@@ -341,10 +357,10 @@ function addTemplate($url)
             echo "Downloading file: {$value->path}\n";
             $file = file_get_contents("$url/" . $value->path);
             echo "installing file: -> {$value->path}\n";
-            @file_put_contents($value->path, $file);
+            @file_put_contents($projectPath . $value->path, $file);
         } else if ($value->mode == "040000") {
             echo "create directory {$value->path}\n";
-            mkdir($value->path);
+            mkdir($projectPath . $value->path);
         } else {
             echo "ERROR!! Not know mode";
         }
@@ -355,11 +371,19 @@ function addTemplate($url)
     $project_name = explode($ex, __DIR__);
     $project_name = $project_name[sizeof($project_name) - 1];
     $project_name = str_replace('.', '', $project_name);
-    $package = getPackage();
-    $package->name = $project_name;
-    savePackage($package);
-
-    echo "install successfuly\n";
+    if (isset($GLOBALS['command'][2])) {
+        $package = getPackage($GLOBALS['command'][2]);
+        $package->name = $GLOBALS['command'][2];
+        savePackage($package, $GLOBALS['command'][2]);
+        echo "install successfuly\n\n";
+        echo "cd " . $GLOBALS['command'][2];
+    } else {
+        $package = getPackage();
+        $package->name = $project_name;
+        savePackage($package);
+        echo "install successfuly\n";
+    }
+    die;
 }
 
 function addModule($url, $moduleName, $version = 'main', $has_modules = false, $asking = true)

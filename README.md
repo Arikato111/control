@@ -33,6 +33,7 @@
 
 - ### ติดตั้ง control ผ่าน bash, cmd หรือ powershell
 - คัดลอกคำสั่งด้านล่าง แล้วรันบน bash, cmd หรือ powershell ในโฟลเดอร์ของโปรเจค
+
 ```
 curl https://raw.githubusercontent.com/Arikato111/control/master/control -o control
 ```
@@ -107,6 +108,9 @@ $$  How-to-use-!$$
 `# control create <template>` เป็นการติดตั้ง **template** โดยแทน `<template>` ด้วยชื่อของ template ที่ต้องการติดตั้ง
 
 `# control create <template>@<version>` สามารถระบุเวอร์ชั่นย่อยของ **template** ได้ โดยแทน `<version>` ด้วยชื่อเวอร์ชั่นย่อยที่ต้องการ
+
+- สามารถติดตั้ง **template** ลงในโฟลเดอร์โปรเจคได้ โดยใช้ 
+- `# control create <template> <projectName>` แทน `<projectName>` ด้วยชื่อโปรเจคของคุณ จากนั้นจะทำการสร้าง โฟลเดอร์ชื่อเดียวกับ `projectName` และทำการติดตั้งโค้ดลงในโฟลเดอร์นั้น
 
 `# control remove <library>` เป็นการลบ library ที่เคยติดตั้งไปแล้ว โดยแทน `<library>` ด้วยชื่อ library ที่ต้องการลบ
 - สามารถเขียน `remove` ให้สั้นลงเหลือ `rm` ได้
