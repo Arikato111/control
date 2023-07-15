@@ -79,13 +79,6 @@ if (isset($GLOBALS['command'][0])) {
             update();
             break;
         default:
-            if (in_array('-v', $GLOBALS['option']) || in_array('--version', $GLOBALS['option'])) {
-                echo CONTROL_VERSION . PHP_EOL;
-                die;
-            } elseif (in_array('-h', $GLOBALS['option']) || in_array('--help', $GLOBALS['option'])) {
-                Help();
-                die;
-            }
             if (file_exists('./package.json')) {
                 // run scripts command on package.json
                 $package = getPackage();
@@ -97,6 +90,13 @@ if (isset($GLOBALS['command'][0])) {
             echo "command not found\n";
     }
 } else {
+    if (in_array('-v', $GLOBALS['option']) || in_array('--version', $GLOBALS['option'])) {
+        echo CONTROL_VERSION . PHP_EOL;
+        die;
+    } elseif (in_array('-h', $GLOBALS['option']) || in_array('--help', $GLOBALS['option'])) {
+        Help();
+        die;
+    }
     Help();
 }
 
@@ -425,6 +425,7 @@ function update()
 {
     ini_set('user_agent', '3lcieh2dfbon3032a');
     file_put_contents('control', @file_get_contents('https://raw.githubusercontent.com/Arikato111/control/master/control'));
+    echo "update successfuly\n";
 }
 
 // *********** init ************************** //
