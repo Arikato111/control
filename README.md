@@ -2,7 +2,7 @@
   <img height="30" width="40" src="https://github.com/Arikato111/Arikato111/raw/main/icons/php-plain.svg">
 </p>
 
-# <p align="center">control</p>
+# <p align="center">control [closed]</p>
 
 <p align="center">
   <img alt="Github License" src="https://img.shields.io/github/license/Arikato111/control" />
@@ -15,7 +15,7 @@
 
 ตัวช่วยจัดการ library & template for PHP
 
-ดูชื่อและรายละเอียดของ library และ template ต่างๆ ได้ที่ [package.anytion](https://package.anytion.com/package/)
+สถานะ: เว็บที่เก็บ lib & template ปิดปรับปรุงยาวๆ มีแผนว่าจะใช้ typescript ในการเขียน และใช้ภาษา rust สำหรับโปรแกรม control
 
 ---
 
